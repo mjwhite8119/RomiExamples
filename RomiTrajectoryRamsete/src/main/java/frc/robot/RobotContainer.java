@@ -165,7 +165,6 @@ public class RobotContainer {
         m_drivetrain::getPose,
         new RamseteController(ControlConstants.kRamseteB, ControlConstants.kRamseteZeta),
         DriveConstants.kFeedForward,
-        // new SimpleMotorFeedforward(DriveConstants.ksVolts, DriveConstants.kvVoltSecondsPerMeter, DriveConstants.kaVoltSecondsSquaredPerMeter),
         DriveConstants.kDriveKinematics,
         m_drivetrain::getWheelSpeeds,
         new PIDController(DriveConstants.kPDriveVelLeft, 0, 0),
