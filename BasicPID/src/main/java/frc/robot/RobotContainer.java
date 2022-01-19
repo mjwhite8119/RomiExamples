@@ -13,7 +13,8 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.DrivetrainConstants;
+import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.commands.ArcadeDrive;
 import frc.robot.commands.AutonomousDistance;
 import frc.robot.commands.AutonomousPIDDistance;
@@ -116,11 +117,11 @@ public class RobotContainer {
       .withPosition(6, 0);
 
     // Add PID tuning parameters
-    m_distanceP = driveTab.add("kP", DriveConstants.kPDriveVel)
+    m_distanceP = driveTab.add("kP", DrivetrainConstants.kPDriveVel)
       .withPosition(3, 1)
       .getEntry();  
 
-    m_distanceD = driveTab.add("kD", DriveConstants.kDDriveVel)
+    m_distanceD = driveTab.add("kD", DrivetrainConstants.kDDriveVel)
       .withPosition(3, 2)
       .getEntry();  
   
@@ -128,11 +129,11 @@ public class RobotContainer {
       .withPosition(4, 0)
       .getEntry();  
 
-    m_angleP = driveTab.add("anglekP", DriveConstants.kPTurnVel)
+    m_angleP = driveTab.add("anglekP", DrivetrainConstants.kPTurnVel)
       .withPosition(4, 1)
       .getEntry();  
 
-    m_angleD = driveTab.add("anglekD", DriveConstants.kDTurnVel)
+    m_angleD = driveTab.add("anglekD", DrivetrainConstants.kDTurnVel)
       .withPosition(4, 2)
       .getEntry();  
   }

@@ -9,7 +9,8 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
-import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.DrivetrainConstants;
+import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.subsystems.Drivetrain;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -21,37 +22,38 @@ public class DriveDistancePID extends PIDCommand {
   private static NetworkTableInstance inst = NetworkTableInstance.getDefault();
   private static NetworkTable table = inst.getTable("Shuffleboard/Drivetrain");
   
-  public DriveDistancePID(double targetDistance, Drivetrain drive) {
+  public DriveDistancePID(double targetDistance, Drivetrain drivetrain) {
     super(
         // The controller that the command will use
-        new PIDController(DriveConstants.kPDriveVel,
-                          DriveConstants.kIDriveVel,
-                          DriveConstants.kDDriveVel),
+        new PIDController(DrivetrainConstants.kPDriveVel,
+                          DrivetrainConstants.kIDriveVel,
+                          DrivetrainConstants.kDDriveVel),
         // This should return the measurement
-        drive::getAverageDistanceMeters,
+        drivetrain::getAverageDistanceMeters,
         // This should return the setpoint (can also be a constant)
         targetDistance,
         // This uses the output
         output -> {
           // Use the output here
-          drive.steer(output);
-        },
-        // Use addRequirements() here to declare subsystem dependencies.
-        drive);
+          drivetrain.drive(output, 0);
+        });
     
-    // Configure additional PID options by calling `getController` here.
-    getController().setTolerance(DriveConstants.kDistanceToleranceMeters,
-                                DriveConstants.kVelocityToleranceMetersPerS);
+    // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(drivetrain);
 
-    m_drive = drive;
+    // Configure additional PID options by calling `getController` here.
+    getController().setTolerance(DrivetrainConstants.kDistanceToleranceMeters,
+                                DrivetrainConstants.kVelocityToleranceMetersPerS);
+
+    m_drive = drivetrain;
   }
 
   public void initialize() {
     super.initialize();
     // Override PID parameters from Shuffleboard
     getController().setSetpoint(table.getEntry("Distance").getDouble(0.0));
-    getController().setP(table.getEntry("kP").getDouble(DriveConstants.kPDriveVel));
-    getController().setD(table.getEntry("kD").getDouble(DriveConstants.kDDriveVel));
+    getController().setP(table.getEntry("kP").getDouble(DrivetrainConstants.kPDriveVel));
+    getController().setD(table.getEntry("kD").getDouble(DrivetrainConstants.kDDriveVel));
   }
   
 

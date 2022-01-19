@@ -21,9 +21,13 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.DrivetrainConstants;
+import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.sensors.RomiGyro;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.math.MatBuilder;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Nat;
@@ -78,14 +82,14 @@ public class Drivetrain extends SubsystemBase {
       .getEntry();
 
   private final PIDController m_leftController =
-    new PIDController(DriveConstants.kPDriveVel, 
-                      DriveConstants.kIDriveVel, 
-                      DriveConstants.kDDriveVel);
+    new PIDController(DrivetrainConstants.kPDriveVel, 
+                      DrivetrainConstants.kIDriveVel, 
+                      DrivetrainConstants.kDDriveVel);
 
   private final PIDController m_rightController =
-  new PIDController(DriveConstants.kPDriveVel, 
-                    DriveConstants.kIDriveVel, 
-                    DriveConstants.kDDriveVel);    
+  new PIDController(DrivetrainConstants.kPDriveVel, 
+                    DrivetrainConstants.kIDriveVel, 
+                    DrivetrainConstants.kDDriveVel);    
 
   /*********************************
    * Creates a new Drivetrain.
@@ -93,15 +97,15 @@ public class Drivetrain extends SubsystemBase {
   */
   public Drivetrain() {
     // Use inches as unit for encoder distances
-    m_leftEncoder.setDistancePerPulse((Math.PI * DriveConstants.kWheelDiameterMeters) / DriveConstants.kCountsPerRevolution);
-    m_rightEncoder.setDistancePerPulse((Math.PI * DriveConstants.kWheelDiameterMeters) / DriveConstants.kCountsPerRevolution);
+    m_leftEncoder.setDistancePerPulse((Math.PI * DrivetrainConstants.kWheelDiameterMeters) / DrivetrainConstants.kCountsPerRevolution);
+    m_rightEncoder.setDistancePerPulse((Math.PI * DrivetrainConstants.kWheelDiameterMeters) / DrivetrainConstants.kCountsPerRevolution);
     
     // Reset pose
     resetEncoders();
     resetGyro();
 
     // Call these to so that the information is immediatelly available in Simulator
-    steer(0);
+    // steer(0);
     arcadeDrive(0, 0);
     turn(0);
 
@@ -111,6 +115,21 @@ public class Drivetrain extends SubsystemBase {
 
     // Setup Pose Estimator
     SmartDashboard.putData("fieldEstimate", m_estimatedField2d);
+  }
+
+  // -----------------------------------------------------------
+  // Control Input
+  // -----------------------------------------------------------
+  public void drive(DoubleSupplier move, DoubleSupplier rotate){
+    drive(move.getAsDouble(), rotate.getAsDouble(), true);
+  }
+
+  public void drive(double move, double rotate, boolean squaredInputs){
+      m_diffDrive.arcadeDrive(move, rotate, squaredInputs);
+  }
+
+  public void drive(double move, double rotate){
+      drive(move, rotate, true);
   }
 
   public void arcadeDrive(double xaxisSpeed, double zaxisRotate) {
@@ -145,7 +164,7 @@ public class Drivetrain extends SubsystemBase {
    */
   public void tankDriveVolts(double leftVolts, double rightVolts) {
     
-    // double rightVoltsCalibrated = rightVolts * DriveConstants.rightVoltsGain;
+    // double rightVoltsCalibrated = rightVolts * DrivetrainConstants.rightVoltsGain;
     SmartDashboard.putNumber("Total Left Volts", leftVolts);
     SmartDashboard.putNumber("Total Right Volts", rightVolts);
 
@@ -162,12 +181,12 @@ public class Drivetrain extends SubsystemBase {
    * 
    * @param velocity The velocity at which to drive
    */
-  public void steerVelocity(double velocity) {
+  public void setOutputVelocity(double velocity) {
     SmartDashboard.putNumber("Requested Velocity", velocity);
 
     // Calculate feedforward voltage
-    double leftFeedforward = DriveConstants.kLeftFeedForward.calculate(velocity);
-    double rightFeedforward = DriveConstants.kRightFeedForward.calculate(velocity);
+    double leftFeedforward = DrivetrainConstants.kLeftFeedForward.calculate(velocity);
+    double rightFeedforward = DrivetrainConstants.kRightFeedForward.calculate(velocity);
     SmartDashboard.putNumber("Left Feedforward Volts", leftFeedforward);
     SmartDashboard.putNumber("Right Feedforward Volts", rightFeedforward);
 
@@ -177,21 +196,21 @@ public class Drivetrain extends SubsystemBase {
     SmartDashboard.putNumber("Left Volts", leftVelocity);
     SmartDashboard.putNumber("Right Volts", rightVelocity);
 
-    // double calibratedRightSpeed = output * DriveConstants.rightVoltsGain;
+    // double calibratedRightSpeed = output * DrivetrainConstants.rightVoltsGain;
     tankDriveVolts(leftFeedforward + leftVelocity, rightFeedforward + rightVelocity);
   }
 
-  /**
-   * Drives a straight line at the requested output -1.0..1.0
-   * 
-   * @param output Output value between -1.0..1.0
-   */
-  public void steer(double output) {
-    SmartDashboard.putNumber("Requested Output", output);
+  // /**
+  //  * Drives a straight line at the requested output -1.0..1.0
+  //  * 
+  //  * @param output Output value between -1.0..1.0
+  //  */
+  // public void steer(double output) {
+  //   SmartDashboard.putNumber("Requested Output", output);
 
-    // double calibratedRightSpeed = output * DriveConstants.rightVoltsGain;
-    tankDrive(output, output);
-  }
+  //   // double calibratedRightSpeed = output * DrivetrainConstants.rightVoltsGain;
+  //   tankDrive(output, output);
+  // }
 
   public void turn(double output) {
     // Restrict the turn speed

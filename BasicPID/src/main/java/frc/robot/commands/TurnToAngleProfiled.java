@@ -6,7 +6,8 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.DrivetrainConstants;
+import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.subsystems.Drivetrain;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
 
@@ -18,28 +19,29 @@ public class TurnToAngleProfiled extends ProfiledPIDCommand {
    * @param targetAngleDegrees The angle to turn to
    * @param drive The drive subsystem to use
    */
-  public TurnToAngleProfiled(double targetAngleDegrees, Drivetrain drive) {
+  public TurnToAngleProfiled(double targetAngleDegrees, Drivetrain drivetrain) {
     super(
         new ProfiledPIDController(
-            DriveConstants.kPTurnVelProfiled,
-            DriveConstants.kITurnVelProfiled,
-            DriveConstants.kDTurnVelProfiled,
-            DriveConstants.kTrapezoidProfileTurnConstraints),
+            DrivetrainConstants.kPTurnVelProfiled,
+            DrivetrainConstants.kITurnVelProfiled,
+            DrivetrainConstants.kDTurnVelProfiled,
+            DrivetrainConstants.kTrapezoidProfileTurnConstraints),
         // Close loop on heading
-        drive::getHeading,
+        drivetrain::getHeading,
         // Set reference to target
         targetAngleDegrees,
         // Pipe output to turn robot
-        (output, setpoint) -> drive.turn(-output),
-        // Require the drive
-        drive);
+        (output, setpoint) -> drivetrain.turn(-output));
+
+    // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(drivetrain);
 
     // Set the controller to be continuous (because it is an angle controller)
     // getController().enableContinuousInput(-180, 180);
     // Set the controller tolerance - the delta tolerance ensures the robot is stationary at the
     // setpoint before it is considered as having reached the reference
     getController()
-        .setTolerance(DriveConstants.kTurnToleranceDeg, DriveConstants.kTurnRateToleranceDegPerS);
+        .setTolerance(DrivetrainConstants.kTurnToleranceDeg, DrivetrainConstants.kTurnRateToleranceDegPerS);
   }
 
   public void execute() {

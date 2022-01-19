@@ -20,7 +20,7 @@ import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstrai
  * wherever the constants are needed, to reduce verbosity.
  */
 public final class Constants {
-    public static final class DriveConstants {
+    public static final class DrivetrainConstants {
 
         // -------- Physical Constants -----------------
         public static final double kCountsPerRevolution = 1440.0;
@@ -80,13 +80,13 @@ public final class Constants {
 
         // Drive profile
         public static final TrapezoidProfile.Constraints kTrapezoidProfileConstraints =
-            new TrapezoidProfile.Constraints(DriveConstants.kMaxSpeedMetersPerSecond,
-                                            DriveConstants.kMaxAccelMetersPerSecondSquared);
+            new TrapezoidProfile.Constraints(DrivetrainConstants.kMaxSpeedMetersPerSecond,
+                                            DrivetrainConstants.kMaxAccelMetersPerSecondSquared);
 
         // Turn profile                                    
         public static final TrapezoidProfile.Constraints kTrapezoidProfileTurnConstraints =
-            new TrapezoidProfile.Constraints(DriveConstants.kMaxTurnRateDegPerS,
-                                             DriveConstants.kMaxTurnAccelDegPerSSquared);                                    
+            new TrapezoidProfile.Constraints(DrivetrainConstants.kMaxTurnRateDegPerS,
+                                             DrivetrainConstants.kMaxTurnAccelDegPerSSquared);                                    
 
         // For distances PID
         public static final double kPDriveVel = 2;
