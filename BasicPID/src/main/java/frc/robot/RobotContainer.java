@@ -24,12 +24,14 @@ import frc.robot.commands.DriveDistanceProfiled;
 import frc.robot.commands.ResetOdometry;
 import frc.robot.commands.TurnToAnglePID;
 import frc.robot.commands.TurnToAngleProfiled;
+import frc.robot.oi.DriverOI;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.OnBoardIO;
 import frc.robot.subsystems.OnBoardIO.ChannelMode;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.button.Button;
 
@@ -45,8 +47,10 @@ public class RobotContainer {
   private final OnBoardIO m_onboardIO = new OnBoardIO(ChannelMode.INPUT, ChannelMode.INPUT);
 
   // Assumes a gamepad plugged into channnel 0
-  private final Joystick m_joystick = new Joystick(0);
-  // private final XboxController m_joystick = new XboxController(0);
+  // private final Joystick m_joystick = new Joystick(0);
+  private final XboxController m_joystick = new XboxController(0);
+
+  private final DriverOI m_driverOI = new DriverOI(m_joystick);
 
   // Create SmartDashboard chooser for autonomous routines
   private final SendableChooser<Command> m_chooser = new SendableChooser<>();
@@ -102,6 +106,8 @@ public class RobotContainer {
     m_chooser.addOption("Drive Square", new AutonomousPIDDistance(m_drivetrain));   
     m_chooser.addOption("Reset Odometry", new ResetOdometry(m_drivetrain));
     SmartDashboard.putData(m_chooser);
+
+    m_driverOI.resetOdometry().whenPressed(new ResetOdometry(m_drivetrain));
   }
 
   /**
