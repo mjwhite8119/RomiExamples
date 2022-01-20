@@ -42,7 +42,7 @@ public class DriveDistanceProfiled extends ProfiledPIDCommand {
 
         // Use the calculated velocity at each setpoint
         (output, setpoint) -> {
-          drivetrain.setOutputVelocity(output);
+          drivetrain.setOutputMetersPerSecond(output);
         });
 
     // Use addRequirements() here to declare subsystem dependencies.

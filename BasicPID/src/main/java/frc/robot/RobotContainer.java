@@ -45,7 +45,8 @@ public class RobotContainer {
   private final OnBoardIO m_onboardIO = new OnBoardIO(ChannelMode.INPUT, ChannelMode.INPUT);
 
   // Assumes a gamepad plugged into channnel 0
-  private final Joystick m_controller = new Joystick(0);
+  private final Joystick m_joystick = new Joystick(0);
+  // private final XboxController m_joystick = new XboxController(0);
 
   // Create SmartDashboard chooser for autonomous routines
   private final SendableChooser<Command> m_chooser = new SendableChooser<>();
@@ -94,9 +95,9 @@ public class RobotContainer {
         .whenInactive(new PrintCommand("Button A Released"));
 
     // Setup SmartDashboard options
-    m_chooser.setDefaultOption("Profiled Turn Angle PID", new TurnToAngleProfiled(180, m_drivetrain));
-    m_chooser.addOption("Drive Distance PID", new DriveDistancePID(1.0, m_drivetrain));
+    m_chooser.setDefaultOption("Drive Distance PID", new DriveDistancePID(1.0, m_drivetrain));
     m_chooser.addOption("Profiled Distance PID", new DriveDistanceProfiled(1.0, m_drivetrain));
+    m_chooser.addOption("Profiled Turn Angle PID", new TurnToAngleProfiled(180, m_drivetrain));
     m_chooser.addOption("Turn Degrees PID", new TurnToAnglePID(90, m_drivetrain));
     m_chooser.addOption("Drive Square", new AutonomousPIDDistance(m_drivetrain));   
     m_chooser.addOption("Reset Odometry", new ResetOdometry(m_drivetrain));
@@ -154,6 +155,6 @@ public class RobotContainer {
    */
   public Command getArcadeDriveCommand() {
     return new ArcadeDrive(
-        m_drivetrain, () -> -m_controller.getRawAxis(1), () -> m_controller.getRawAxis(2));
+        m_drivetrain, () -> -m_joystick.getRawAxis(1), () -> m_joystick.getRawAxis(4));
   }
 }

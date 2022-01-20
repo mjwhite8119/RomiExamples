@@ -7,10 +7,10 @@ package frc.robot.subsystems;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.BuiltInAccelerometer;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -121,21 +121,19 @@ public class Drivetrain extends SubsystemBase {
   // Control Input
   // -----------------------------------------------------------
   public void drive(DoubleSupplier move, DoubleSupplier rotate){
-    drive(move.getAsDouble(), rotate.getAsDouble(), true);
-  }
-
-  public void drive(double move, double rotate, boolean squaredInputs){
-      m_diffDrive.arcadeDrive(move, rotate, squaredInputs);
+    arcadeDrive(move.getAsDouble(), rotate.getAsDouble());
   }
 
   public void drive(double move, double rotate){
-      drive(move, rotate, true);
+    arcadeDrive(move, rotate);
   }
 
   public void arcadeDrive(double xaxisSpeed, double zaxisRotate) {
     SmartDashboard.putNumber("ArcadeDrive xaxisSpeed", xaxisSpeed);
     SmartDashboard.putNumber("ArcadeDrive zaxisRotate", zaxisRotate);
-    m_diffDrive.arcadeDrive(xaxisSpeed, zaxisRotate);
+    // TODO This is reversed after 2022 import for some reason???
+    // m_diffDrive.arcadeDrive(xaxisSpeed, zaxisRotate);
+    m_diffDrive.arcadeDrive(zaxisRotate, xaxisSpeed);
   }
 
   public void rateLimitedArcadeDrive(double xaxisSpeed, double zaxisRotate) {
@@ -181,7 +179,7 @@ public class Drivetrain extends SubsystemBase {
    * 
    * @param velocity The velocity at which to drive
    */
-  public void setOutputVelocity(double velocity) {
+  public void setOutputMetersPerSecond(double velocity) {
     SmartDashboard.putNumber("Requested Velocity", velocity);
 
     // Calculate feedforward voltage

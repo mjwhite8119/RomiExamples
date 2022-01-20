@@ -30,11 +30,33 @@
       "/SmartDashboard/fieldEstimate": "Field2d"
     },
     "windows": {
+      "/Shuffleboard/Drivetrain/Drivetrain": {
+        "window": {
+          "visible": true
+        }
+      },
       "/SmartDashboard/SendableChooser[0]": {
         "window": {
           "visible": true
         }
+      },
+      "/SmartDashboard/field": {
+        "Robot": {
+          "length": 0.15000000596046448,
+          "weight": 2.0,
+          "width": 0.15000000596046448
+        },
+        "height": 2.0,
+        "width": 5.0,
+        "window": {
+          "visible": true
+        }
       }
+    }
+  },
+  "NetworkTables": {
+    "SmartDashboard": {
+      "open": true
     }
   }
 }
