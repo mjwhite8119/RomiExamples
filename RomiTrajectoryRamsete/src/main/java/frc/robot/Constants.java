@@ -20,7 +20,8 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
  * wherever the constants are needed, to reduce verbosity.
  */
 public final class Constants {
-  public static final class DriveConstants {
+  public static final class DrivetrainConstants
+   {
 
     // -------- Physical Constants -----------------
     public static final double kCountsPerRevolution = 1440.0;
@@ -32,7 +33,8 @@ public final class Constants {
 
     // Calibration for the right wheel voltage because it's much slower
     // than the left wheel on this robot.
-    public static final double rightVoltsGain = 1.094;
+    // public static final double rightVoltsGain = 1.094; // Romi
+    public static final double rightVoltsGain = 1.0; // Romi-2
 
     // -------- Dynamical constants --------------------
 
