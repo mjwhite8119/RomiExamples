@@ -4,7 +4,7 @@
 
 package frc.robot.commands;
 
-import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.subsystems.Drivetrain;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
@@ -58,7 +58,7 @@ public class TurnDegrees extends CommandBase {
     */
     
     // Compare distance travelled from start to distance based on degree turn
-    return getAverageTurningDistance() >= (DriveConstants.kMetersPerDegree * m_degrees);
+    return getAverageTurningDistance() >= (DrivetrainConstants.kMetersPerDegree * m_degrees);
   }
 
   private double getAverageTurningDistance() {

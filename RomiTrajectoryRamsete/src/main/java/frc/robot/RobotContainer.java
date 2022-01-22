@@ -19,10 +19,11 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.Constants.ControlConstants;
-import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.commands.ArcadeDrive;
 import frc.robot.commands.AutonomousDistance;
 import frc.robot.commands.AutonomousTime;
+import frc.robot.commands.RunRamseteTrajectory;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.OnBoardIO;
 import frc.robot.subsystems.OnBoardIO.ChannelMode;
@@ -98,7 +99,7 @@ public class RobotContainer {
             new Translation2d(1.0, 0.0) 
         ),
         new Pose2d(2.0, 0.0, new Rotation2d(0)), // left
-        DriveConstants.kTrajectoryConfig);
+        DrivetrainConstants.kTrajectoryConfig);
 
     return trajectory;
   }
@@ -124,7 +125,7 @@ public class RobotContainer {
             // new Translation2d(0.4, -0.20) 
         ),
         new Pose2d(-0.0, -0.2, new Rotation2d(Math.PI)),
-        DriveConstants.kTrajectoryConfig);
+        DrivetrainConstants.kTrajectoryConfig);
 
     return trajectory;
   }
@@ -144,7 +145,7 @@ public class RobotContainer {
             new Translation2d(0.0, 0.5) // back           
         ),
         new Pose2d(0.0, 0.0, new Rotation2d(0)), // left
-        DriveConstants.kTrajectoryConfig);
+        DrivetrainConstants.kTrajectoryConfig);
 
     return trajectory;
   }
@@ -164,11 +165,11 @@ public class RobotContainer {
         exampleTrajectory,
         m_drivetrain::getPose,
         new RamseteController(ControlConstants.kRamseteB, ControlConstants.kRamseteZeta),
-        DriveConstants.kFeedForward,
-        DriveConstants.kDriveKinematics,
+        DrivetrainConstants.kFeedForward,
+        DrivetrainConstants.kDriveKinematics,
         m_drivetrain::getWheelSpeeds,
-        new PIDController(DriveConstants.kPDriveVelLeft, 0, 0),
-        new PIDController(DriveConstants.kPDriveVelRight, 0, 0),
+        new PIDController(DrivetrainConstants.kPDriveVelLeft, 0, 0),
+        new PIDController(DrivetrainConstants.kPDriveVelRight, 0, 0),
         m_drivetrain::tankDriveVolts,
         m_drivetrain);
 
@@ -178,10 +179,10 @@ public class RobotContainer {
     // First, we want to reset the drivetrain odometry
     return new InstantCommand(() -> m_drivetrain.resetOdometry(exampleTrajectory.getInitialPose()), m_drivetrain)
         // next, we run the actual ramsete command
-        .andThen(ramseteCommand)
+        .andThen(ramseteCommand);
 
         // Finally, we make sure that the robot stops
-        .andThen(new InstantCommand(() -> m_drivetrain.tankDriveVolts(0, 0), m_drivetrain));
+        // .andThen(new InstantCommand(() -> m_drivetrain.tankDriveVolts(0, 0), m_drivetrain));
   } 
 
   /**
@@ -202,10 +203,10 @@ public class RobotContainer {
         .whenInactive(new PrintCommand("Button A Released"));
 
     // Setup SmartDashboard options
-    
-    m_chooser.setDefaultOption("Navigate Cones Trajectory", generateRamseteCommand(navigateConesTrajectory()));
-    m_chooser.addOption("Drive Square Trajectory", generateRamseteCommand(driveSquareTrajectory()));
-    m_chooser.addOption("Calibrate Trajectory", generateRamseteCommand(calibrateTrajectory()));
+    m_chooser.setDefaultOption("Navigate Cones Trajectory", new RunRamseteTrajectory(m_drivetrain, navigateConesTrajectory()));
+    m_chooser.addOption("Calibrate Trajectory", new RunRamseteTrajectory(m_drivetrain, calibrateTrajectory()));
+    m_chooser.addOption("Drive Square Trajectory", new RunRamseteTrajectory(m_drivetrain, driveSquareTrajectory()));
+    m_chooser.addOption("Old Calibrate Trajectory", generateRamseteCommand(calibrateTrajectory()));
     
     SmartDashboard.putData(m_chooser);
   }
@@ -217,8 +218,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     return m_chooser.getSelected();
-    
-
   }
 
   /**

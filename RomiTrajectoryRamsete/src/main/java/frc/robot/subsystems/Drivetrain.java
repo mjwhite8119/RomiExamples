@@ -22,7 +22,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.sensors.RomiGyro;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.math.MatBuilder;
@@ -83,11 +83,16 @@ public class Drivetrain extends SubsystemBase {
       .withPosition(3, 3)
       .getEntry();     
 
-  /** Creates a new Drivetrain. */
+  // -----------------------------------------------------------
+  // Initialization
+  // -----------------------------------------------------------
+
+  /** Contructor
+   * Creates a new Drivetrain. */
   public Drivetrain() {
     // Use inches as unit for encoder distances
-    m_leftEncoder.setDistancePerPulse((Math.PI * DriveConstants.kWheelDiameterMeters) / DriveConstants.kCountsPerRevolution);
-    m_rightEncoder.setDistancePerPulse((Math.PI * DriveConstants.kWheelDiameterMeters) / DriveConstants.kCountsPerRevolution);
+    m_leftEncoder.setDistancePerPulse((Math.PI * DrivetrainConstants.kWheelDiameterMeters) / DrivetrainConstants.kCountsPerRevolution);
+    m_rightEncoder.setDistancePerPulse((Math.PI * DrivetrainConstants.kWheelDiameterMeters) / DrivetrainConstants.kCountsPerRevolution);
     resetEncoders();
 
     Pose2d initialPose = new Pose2d(0, 1.5, m_gyro.getRotation2d()); 
@@ -96,6 +101,10 @@ public class Drivetrain extends SubsystemBase {
     SmartDashboard.putData("field", m_field2d);
     SmartDashboard.putData("fieldEstimate", m_estimatedField2d);
   }
+
+  // -----------------------------------------------------------
+  // Control Input
+  // -----------------------------------------------------------
 
   public void arcadeDrive(double xaxisSpeed, double zaxisRotate) {
     m_diffDrive.arcadeDrive(xaxisSpeed, zaxisRotate);
@@ -113,7 +122,7 @@ public class Drivetrain extends SubsystemBase {
    */
   public void tankDriveVolts(double leftVolts, double rightVolts) {
     
-    double rightVoltsCalibrated = rightVolts * DriveConstants.rightVoltsGain;
+    double rightVoltsCalibrated = rightVolts * DrivetrainConstants.rightVoltsGain;
 
     // Send to Network Tables
     m_leftVolts.setDouble(leftVolts);
@@ -125,10 +134,50 @@ public class Drivetrain extends SubsystemBase {
     m_diffDrive.feed();
   }
 
+  public void stopDrivetrain() {
+    tankDriveVolts(0, 0);
+  }
+
   public void resetEncoders() {
     m_leftEncoder.reset();
     m_rightEncoder.reset();
   }
+
+  /**
+   * Resets the odometry to the specified pose
+   * @param pose The pose to which to set the odometry
+   */
+  public void resetOdometry(Pose2d pose) {
+    resetEncoders();
+    m_odometry.resetPosition(pose, m_gyro.getRotation2d());
+  }
+
+  /**
+   * Sets the max output of the drive. Useful for scaling the drive to drive more slowly
+   * @param maxOutput The maximum output to which the drive will be constrained
+   */
+  public void setMaxOutput(double maxOutput) {
+    m_diffDrive.setMaxOutput(maxOutput);
+  }
+
+  /**
+   * Zeroes the heading of the robot
+   */
+  public void zeroHeading() {
+    m_gyro.reset();
+  }
+  
+  // -----------------------------------------------------------
+  // Process Logic
+  // -----------------------------------------------------------
+  @Override
+  public void periodic() {
+    publishTelemetry();
+  }
+
+  // -----------------------------------------------------------
+  // System State
+  // -----------------------------------------------------------
 
   public int getLeftEncoderCount() {
     return m_leftEncoder.get();
@@ -224,11 +273,6 @@ public class Drivetrain extends SubsystemBase {
     m_gyro.reset();
   }
 
-  @Override
-  public void periodic() {
-    publishTelemetry();
-  }
-
   /**  
    * Publishes telemetry data to the Network Tables for use
    * in Shuffleboard and the Simulator
@@ -290,30 +334,6 @@ public class Drivetrain extends SubsystemBase {
    */
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
     return new DifferentialDriveWheelSpeeds(m_leftEncoder.getRate(), m_rightEncoder.getRate());
-  }
-
-  /**
-   * Resets the odometry to the specified pose
-   * @param pose The pose to which to set the odometry
-   */
-  public void resetOdometry(Pose2d pose) {
-    resetEncoders();
-    m_odometry.resetPosition(pose, m_gyro.getRotation2d());
-  }
-
-  /**
-   * Sets the max output of the drive. Useful for scaling the drive to drive more slowly
-   * @param maxOutput The maximum output to which the drive will be constrained
-   */
-  public void setMaxOutput(double maxOutput) {
-    m_diffDrive.setMaxOutput(maxOutput);
-  }
-
-  /**
-   * Zeroes the heading of the robot
-   */
-  public void zeroHeading() {
-    m_gyro.reset();
   }
 
   /**
