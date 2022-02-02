@@ -48,11 +48,8 @@ public final class Constants {
         new TrapezoidProfile.Constraints(DriveConstants.kMaxSpeedMetersPerSecond,
                                         DriveConstants.kMaxAccelMetersPerSecondSquared);                                
 
-    // For distances PID
-    public static final double kPDriveVel = 0.5;
-    // public static final double kIDriveVel = 0.1;
-    public static final double kIDriveVel = 0;
-    public static final double kDDriveVel = 0;
+    // For distances PID                                 kp,  ki, kd,  kf, iz,  peak output
+    public static final Gains kGainsDriveVel = new Gains(0.5,  0,   0,   0,   0,  1.00);    
 
   }
 
@@ -69,13 +66,10 @@ public final class Constants {
   }
 
   public static final class VisionConstants {
-    public static final double kP = -0.03;
-    public static final double ForwardKP = 0.4;
-    public static final double ForwardKD = 0.0;
-    public static final double TurnKP = 0.01;
-    // public static final int END_OF_LINE = 420;
-    // public static final int SETPOINT = 85;
-    // public static final double OUTPUT_TOLERENCE = 0.2;
+    //                                                       kp,  ki, kd,  kf, iz,  peak output
+    public static final Gains kGainsLineFollow = new Gains(-0.03,  0,   0,   0,   0,  1.00);    
+    public static final Gains kGainsTurn = new Gains(-0.02,  0,   0,   0,   0,  1.00); 
+    public static final Gains kGainsForward = new Gains(0.4,  0,   0,   0,   0,  1.00);    
   }  
 
   public final class ServoConstants {

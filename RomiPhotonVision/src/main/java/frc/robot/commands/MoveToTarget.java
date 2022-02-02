@@ -12,25 +12,25 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.RomiCamera;
+import frc.robot.subsystems.Vision;
 
 public class MoveToTarget extends CommandBase {
   private final Drivetrain m_drive;
-  private final RomiCamera m_vision;
+  private final Vision m_vision;
   private final double m_distance;
   private double m_currentRange;
 
-  PIDController m_forwardController = new PIDController(VisionConstants.ForwardKP, 0, 0);
+  PIDController m_forwardController = new PIDController(VisionConstants.kGainsForward.kP, 0, 0);
 
   ProfiledPIDController m_profiledController = 
           new ProfiledPIDController(
             // The PID gains and motion profile constraints
-            DriveConstants.kPDriveVel,
-            DriveConstants.kIDriveVel,
-            DriveConstants.kDDriveVel,
+            DriveConstants.kGainsDriveVel.kP,
+            DriveConstants.kGainsDriveVel.kI,
+            DriveConstants.kGainsDriveVel.kD,
             DriveConstants.kTrapezoidProfileConstraints);
         
-  PIDController m_turnController = new PIDController(VisionConstants.TurnKP, 0, 0);
+  PIDController m_turnController = new PIDController(VisionConstants.kGainsTurn.kP, 0, 0);
   
   // Moving average filter used to smooth out control outputs
   private MedianFilter m_filter = new MedianFilter(10);
@@ -43,7 +43,7 @@ public class MoveToTarget extends CommandBase {
    * @param drive The drivetrain subsystem on which this command will run
    * @param vision The RomiCamera subsystem
    */
-  public MoveToTarget(Drivetrain drive, RomiCamera vision, double distance) {
+  public MoveToTarget(Drivetrain drive, Vision vision, double distance) {
     m_drive = drive;
     m_distance = distance;
     m_vision = vision;

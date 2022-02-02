@@ -15,7 +15,7 @@ import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class RomiCamera extends SubsystemBase {
+public class Vision extends SubsystemBase {
   // Constants such as camera and target height stored. Change per robot and goal!
   // final double CAMERA_HEIGHT_METERS = 0.092;
   final double CAMERA_HEIGHT_METERS = 0.10;
@@ -47,7 +47,7 @@ public class RomiCamera extends SubsystemBase {
    * Contructor
    * Creates a new RomiCamera that gets its data from PhotonVision
    * */
-  public RomiCamera() {
+  public Vision() {
     m_result = m_camera.getLatestResult();
   }
 

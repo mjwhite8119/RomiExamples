@@ -2,17 +2,17 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.IO;
+package frc.robot.oi;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 /** Add your docs here. */
-public class JoystickIO {
+public class DriverOI {
   private XboxController m_controller;
 
-  public JoystickIO(XboxController controller) {
+  public DriverOI(XboxController controller) {
     m_controller = controller;
   }
 
@@ -64,6 +64,10 @@ public class JoystickIO {
 
   public Button tiltDown() {
     return new JoystickButton(m_controller, XboxController.Button.kA.value);
+  }
+
+  public Button trackTargetButton() {
+    return new JoystickButton(m_controller, XboxController.Button.kRightBumper.value);
   }
 
   /**

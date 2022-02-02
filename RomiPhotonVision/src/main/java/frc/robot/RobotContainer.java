@@ -6,7 +6,6 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.IO.JoystickIO;
 import frc.robot.commands.ArcadeDrive;
 import frc.robot.commands.CameraMountCommand;
 import frc.robot.commands.CameraMountLineFollow;
@@ -18,11 +17,13 @@ import frc.robot.commands.RomiCameraCommand;
 import frc.robot.commands.StopMotors;
 import frc.robot.commands.TiltCamera;
 import frc.robot.commands.TurnDegrees;
+import frc.robot.commands.TurnToTarget;
+import frc.robot.oi.DriverOI;
 import frc.robot.subsystems.CameraMount;
 // import frc.robot.subsystems.Bumper;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.OnBoardIO;
-import frc.robot.subsystems.RomiCamera;
+import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.OnBoardIO.ChannelMode;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -45,11 +46,11 @@ public class RobotContainer {
   // private final Joystick m_joystick = new Joystick(0);
   private final XboxController m_joystick = new XboxController(0);
   // private final Bumper m_bumper = new Bumper();
-  private final JoystickIO m_joystickIO = new JoystickIO(m_joystick);
+  private final DriverOI m_driverOI = new DriverOI(m_joystick);
 
   // Add vision components
   private final CameraMount m_camera_mount = new CameraMount();
-  private final RomiCamera m_romi_camera = new RomiCamera();
+  private final Vision m_vision = new Vision();
 
   // Create SmartDashboard chooser for autonomous routines
   private final SendableChooser<Command> m_chooser = new SendableChooser<>();
@@ -83,10 +84,10 @@ public class RobotContainer {
     m_drivetrain.setDefaultCommand(getArcadeDriveCommand());
 
     // Default command to control the camera mount servos if they are installed
-    m_camera_mount.setDefaultCommand( new CameraMountCommand(m_camera_mount, m_joystickIO));
+    m_camera_mount.setDefaultCommand( new CameraMountCommand(m_camera_mount, m_driverOI));
 
     // Default command to run the RomiCamera which gets its data from PhotonVision.
-    m_romi_camera.setDefaultCommand(new RomiCameraCommand(m_romi_camera));
+    m_vision.setDefaultCommand(new RomiCameraCommand(m_vision));
 
     // Example of how to use the onboard IO
     Button onboardButtonA = new Button(m_onboardIO::getButtonAPressed);
@@ -94,15 +95,12 @@ public class RobotContainer {
         .whenActive(new PrintCommand("Button A Pressed"))
         .whenInactive(new PrintCommand("Button A Released"));
 
-    // Bumper button attached to external IO port
-    // Button bumperButton = new Button(m_bumper::getBumperPressed);
-    // bumperButton
-    //     .whenActive(new StopMotors(m_drivetrain))
-    //     .whenInactive(new PrintCommand("Bumper Released"));        
+    // Track target in teleop mode
+    m_driverOI.trackTargetButton().whileHeld(new TurnToTarget(m_drivetrain, m_vision));    
 
     // Setup SmartDashboard options
-    m_chooser.setDefaultOption("Move to Target", new MoveToTarget(m_drivetrain, m_romi_camera, 0.10));
-    m_chooser.addOption("Follow Line", new CameraMountLineFollow(m_drivetrain, m_camera_mount, m_romi_camera));
+    m_chooser.setDefaultOption("Move to Target", new MoveToTarget(m_drivetrain, m_vision, 0.10));
+    m_chooser.addOption("Follow Line", new CameraMountLineFollow(m_drivetrain, m_camera_mount, m_vision));
     m_chooser.addOption("Reset Odometry", new ResetOdometry(m_drivetrain));
     m_chooser.addOption("Tilt Camera", new TiltCamera(m_camera_mount, 78.0));
     m_chooser.addOption("Pan Camera", new PanCamera(m_camera_mount, 98.0));
@@ -126,8 +124,8 @@ public class RobotContainer {
    */
   public Command getArcadeDriveCommand() {
     return new ArcadeDrive(
-        m_drivetrain, () -> -m_joystickIO.xAxisSpeed(), () -> m_joystickIO.zAxisRotate()
-        // m_drivetrain, () -> -m_joystickIO.xAxisBoostSpeed(), () -> m_joystickIO.zAxisBoostRotate()
+        m_drivetrain, () -> -m_driverOI.xAxisSpeed(), () -> m_driverOI.zAxisRotate()
+        // m_drivetrain, () -> -m_driverOI.xAxisBoostSpeed(), () -> m_driverOI.zAxisBoostRotate()
         );
   }
 }

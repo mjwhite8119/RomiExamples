@@ -11,20 +11,20 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.CameraMount;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.RomiCamera;
+import frc.robot.subsystems.Vision;
 
 public class CloseToTarget extends CommandBase {
 
   private final Drivetrain m_drive;
-  private final RomiCamera m_vision;
+  private final Vision m_vision;
   private final CameraMount m_camera_mount;
   private final double m_distance;
   
   private double m_currentRange;
 
-  PIDController m_forwardController = new PIDController(VisionConstants.ForwardKP, 0, 0);
+  PIDController m_forwardController = new PIDController(VisionConstants.kGainsForward.kP, 0, 0);
         
-  PIDController m_turnController = new PIDController(VisionConstants.TurnKP, 0, 0);
+  PIDController m_turnController = new PIDController(VisionConstants.kGainsTurn.kP, 0, 0);
   
   // Moving average filter used to smooth out control outputs
   private MedianFilter m_filter = new MedianFilter(10);
@@ -41,7 +41,7 @@ public class CloseToTarget extends CommandBase {
    * @param distance The distance that the robot should end up from the target.
   */
   public CloseToTarget(Drivetrain drive, 
-                       RomiCamera vision, 
+                       Vision vision, 
                        CameraMount cameraMount,
                        double distance) 
   {

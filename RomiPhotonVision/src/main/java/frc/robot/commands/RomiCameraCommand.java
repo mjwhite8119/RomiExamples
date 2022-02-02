@@ -6,10 +6,10 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.RomiCamera;
+import frc.robot.subsystems.Vision;
 
 public class RomiCameraCommand extends CommandBase {
-  private final RomiCamera m_vision;
+  private final Vision m_vision;
 
   /** 
    * Constructor
@@ -18,7 +18,7 @@ public class RomiCameraCommand extends CommandBase {
    * 
    * @param vision The RomiCamera subsystem
    */
-  public RomiCameraCommand(RomiCamera vision) {
+  public RomiCameraCommand(Vision vision) {
     m_vision = vision;
     addRequirements(vision);
   }

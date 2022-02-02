@@ -14,17 +14,17 @@ import frc.robot.subsystems.Vision;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class LineFollow extends PIDCommand {
+public class TurnToTarget extends PIDCommand {
   private static Drivetrain m_drive;
   private final Vision m_vision;
 
   /** 
-   * Creates a new LineFollow command. 
+   * Creates a new TurnToTarget command. 
   */
-  public LineFollow(Drivetrain drive, Vision vision) {
+  public TurnToTarget(Drivetrain drive, Vision vision) {
     super(
         // The controller that the command will use
-        new PIDController(VisionConstants.kGainsLineFollow.kP, 0, 0),
+        new PIDController(VisionConstants.kGainsTurn.kP, 0, 0),
         // This should return the measurement
         vision::getYaw,
         // This should return the setpoint (can also be a constant)
@@ -32,7 +32,7 @@ public class LineFollow extends PIDCommand {
         // This uses the output
         output -> {
           // Use the output here
-          drive.driveLine(output);
+          drive.arcadeDrive(0, output);
         },
         drive
         );
@@ -45,6 +45,7 @@ public class LineFollow extends PIDCommand {
     // Make sure everything starts from zero
     m_drive.arcadeDrive(0, 0);
     SmartDashboard.putBoolean("Command Finished", false);
+    System.out.println("TurnToTarget Entered");
     // m_vision.resetFilter();
   }
 
@@ -55,13 +56,14 @@ public class LineFollow extends PIDCommand {
 
   @Override
   public void end(boolean interrupted) {
-      // m_drive.arcadeDrive(0, 0);
       SmartDashboard.putBoolean("Command Finished", true);
+      System.out.println("TurnToTarget Exited");
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_vision.hasTargets() == false;
+    return false;
+    // return m_vision.hasTargets() == false;
   }
 }

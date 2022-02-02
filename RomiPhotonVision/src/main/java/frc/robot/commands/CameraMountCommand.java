@@ -5,7 +5,7 @@
 package frc.robot.commands;
 
 import frc.robot.Constants.ServoConstants;
-import frc.robot.IO.JoystickIO;
+import frc.robot.oi.DriverOI;
 import frc.robot.subsystems.CameraMount;
 import frc.robot.subsystems.RomiServo;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 public class CameraMountCommand extends CommandBase {
 
   private final CameraMount m_camera_mount;
-  private final JoystickIO m_joystick;
+  private final DriverOI m_joystick;
 
   /* Creates a new command which controls the romi_servo via 
    * a Joystick.
@@ -24,7 +24,7 @@ public class CameraMountCommand extends CommandBase {
    * 
    */
   public CameraMountCommand(CameraMount cameraMount,
-                            JoystickIO joystick) {
+                            DriverOI joystick) {
     m_camera_mount = cameraMount;
     m_joystick = joystick;
     addRequirements(cameraMount);

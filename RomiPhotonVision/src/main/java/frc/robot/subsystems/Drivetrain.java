@@ -86,7 +86,9 @@ public class Drivetrain extends SubsystemBase {
   public void arcadeDrive(double xaxisSpeed, double zaxisRotate) {
     SmartDashboard.putNumber("xaxisSpeed", xaxisSpeed);
     SmartDashboard.putNumber("zaxisRotate", zaxisRotate);
-    m_diffDrive.arcadeDrive(xaxisSpeed, zaxisRotate);
+    // These got reversed when imported to 2022?
+    m_diffDrive.arcadeDrive(zaxisRotate, xaxisSpeed);
+    // m_diffDrive.arcadeDrive(xaxisSpeed, zaxisRotate);
   }
 
   public void rateLimitedArcadeDrive(double xaxisSpeed, double zaxisRotate) {
