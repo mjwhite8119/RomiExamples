@@ -69,6 +69,7 @@ public final class Constants {
     //                                                       kp,  ki, kd,  kf, iz,  peak output
     public static final Gains kGainsLineFollow = new Gains(-0.03,  0,   0,   0,   0,  1.00);    
     public static final Gains kGainsTurn = new Gains(-0.02,  0,   0,   0,   0,  1.00); 
+    public static final Gains kGainsPan = new Gains(-0.06,  0,   0,   0,   0,  1.00);
     public static final Gains kGainsForward = new Gains(0.4,  0,   0,   0,   0,  1.00);    
   }  
 

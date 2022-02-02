@@ -12,6 +12,7 @@ import frc.robot.commands.CameraMountLineFollow;
 import frc.robot.commands.LineFollow;
 import frc.robot.commands.MoveToTarget;
 import frc.robot.commands.PanCamera;
+import frc.robot.commands.PanToTarget;
 import frc.robot.commands.ResetOdometry;
 import frc.robot.commands.RomiCameraCommand;
 import frc.robot.commands.StopMotors;
@@ -95,8 +96,11 @@ public class RobotContainer {
         .whenActive(new PrintCommand("Button A Pressed"))
         .whenInactive(new PrintCommand("Button A Released"));
 
-    // Track target in teleop mode
-    m_driverOI.trackTargetButton().whileHeld(new TurnToTarget(m_drivetrain, m_vision));    
+    // Track drivetrain to target in teleop mode
+    m_driverOI.trackTargetButton().whileHeld(new TurnToTarget(m_drivetrain, m_vision));
+    
+    // Pan camera mount to target in teleop mode
+    m_driverOI.panTargetButton().whileHeld(new PanToTarget(m_camera_mount, m_vision));
 
     // Setup SmartDashboard options
     m_chooser.setDefaultOption("Move to Target", new MoveToTarget(m_drivetrain, m_vision, 0.10));

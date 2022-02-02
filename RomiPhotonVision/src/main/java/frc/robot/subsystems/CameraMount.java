@@ -29,7 +29,7 @@ public class CameraMount extends SubsystemBase {
    * @param delta Amount to change servo position (degrees)
    */
   public void pan(double delta) {
-    System.out.println("Panning" );
+    System.out.println("Panning " + delta);
     m_pan.incrementServo(delta);
   }
 
@@ -64,6 +64,14 @@ public class CameraMount extends SubsystemBase {
 
   public RomiServo getTilt() {
     return m_tilt;
+  }
+
+  public boolean atMaxPan() {
+    return m_pan.atMaxAngle();
+  }
+
+  public boolean atMinPan() {
+    return m_pan.atMinAngle();
   }
 
   @Override

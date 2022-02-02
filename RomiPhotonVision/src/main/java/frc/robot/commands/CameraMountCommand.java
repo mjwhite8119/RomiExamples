@@ -50,11 +50,11 @@ public class CameraMountCommand extends CommandBase {
       System.out.println("Pan right" );
     }
     if(m_joystick.tiltUp().get()) {
-      m_camera_mount.tilt(-ServoConstants.SERVO_INCREMENT);
+      m_camera_mount.tilt(ServoConstants.SERVO_INCREMENT);
       System.out.println("Tilt up" );
     }
     if(m_joystick.tiltDown().get()) {
-      m_camera_mount.tilt(ServoConstants.SERVO_INCREMENT);
+      m_camera_mount.tilt(-ServoConstants.SERVO_INCREMENT);
       System.out.println("Tilt down" );
     }
 

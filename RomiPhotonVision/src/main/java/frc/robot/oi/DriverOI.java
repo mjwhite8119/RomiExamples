@@ -70,6 +70,10 @@ public class DriverOI {
     return new JoystickButton(m_controller, XboxController.Button.kRightBumper.value);
   }
 
+  public Button panTargetButton() {
+    return new JoystickButton(m_controller, XboxController.Button.kLeftBumper.value);
+  }
+
   /**
    * Utility function to remap a range of values
    * 
