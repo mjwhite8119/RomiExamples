@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import java.util.function.DoubleSupplier;
+
 import javax.sound.sampled.Line;
 
 import org.photonvision.PhotonCamera;
@@ -34,6 +36,7 @@ public class Vision extends SubsystemBase {
   
   // Moving average filter used to smooth out target range
   private MedianFilter m_filter = new MedianFilter(10);
+  private MedianFilter m_yaw_filter = new MedianFilter(10);
   private double m_range;
   private double m_lastRange = 0.0;
 
@@ -55,10 +58,21 @@ public class Vision extends SubsystemBase {
     if (hasTargets()) {
       // double yawOffset = 0.12;
       // SmartDashboard.putNumber("Yaw with Offset", m_result.getBestTarget().getYaw() - yawOffset);
-      return m_result.getBestTarget().getYaw();
+      return m_yaw_filter.calculate(m_result.getBestTarget().getYaw());
     } else {
       System.out.println("NO Target!!!" );
       return 0.0;
+    } 
+  }
+
+  public DoubleSupplier getYawAsDouble() {
+    if (hasTargets()) {
+      // double yawOffset = 0.12;
+      // SmartDashboard.putNumber("Yaw with Offset", m_result.getBestTarget().getYaw() - yawOffset);
+      return () -> m_yaw_filter.calculate(m_result.getBestTarget().getYaw());
+    } else {
+      System.out.println("NO Target!!!" );
+      return () -> 0.0;
     } 
   }
 

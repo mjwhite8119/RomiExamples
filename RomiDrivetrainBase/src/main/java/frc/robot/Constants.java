@@ -5,7 +5,6 @@
 package frc.robot;
 
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -32,25 +31,6 @@ public final class Constants {
     // than the left wheel on this robot.
     public static final double rightVoltsGain = 1.094;
 
-    // Offset in the Y direction for the initial Pose
-    public static final double yPoseOffset = 1.5;
-
-    // -------- Dynamical Constants --------------------
-
-    // Max speed and acceleration of the robot
-    public static final double kMaxSpeedMetersPerSecond = 0.5;
-    public static final double kMaxAccelMetersPerSecondSquared = 0.5;
-
-    // -------- PID Constants --------------------
-
-    // Drive profile
-    public static final TrapezoidProfile.Constraints kTrapezoidProfileConstraints =
-        new TrapezoidProfile.Constraints(DriveConstants.kMaxSpeedMetersPerSecond,
-                                        DriveConstants.kMaxAccelMetersPerSecondSquared);                                
-
-    // For distances PID                                 kp,  ki, kd,  kf, iz,  peak output
-    public static final Gains kGainsDriveVel = new Gains(0.5,  0,   0,   0,   0,  1.00);    
-
   }
 
   public final class ExtIOConstants {
@@ -63,20 +43,6 @@ public final class Constants {
     public static final int PWM2_PORT = 2;
     public static final int PWM3_PORT = 3;
     public static final int PWM4_PORT = 4;
-  }
-
-  public static final class VisionConstants {
-    //                                                       kp,  ki, kd,  kf, iz,  peak output
-    public static final Gains kGainsLineFollow = new Gains(-0.03,  0,   0,   0,   0,  1.00);    
-    public static final Gains kGainsTurn = new Gains(-0.025,  0,   0,   0,   0,  1.00); 
-    public static final Gains kGainsPan = new Gains(-0.06,  0,   0,   0,   0,  1.00);
-    public static final Gains kGainsForward = new Gains(0.4,  0,   0,   0,   0,  1.00);    
-  }  
-
-  public final class ServoConstants {
-    // Incremental amount of change for each button press
-    // or during the periodic check while holding the button down
-    public static final double SERVO_INCREMENT = 1.0;
   }
 
 }

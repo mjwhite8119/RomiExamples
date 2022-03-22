@@ -26,18 +26,18 @@ public class TurnToTarget extends PIDCommand {
         // The controller that the command will use
         new PIDController(VisionConstants.kGainsTurn.kP, 0, 0),
         // This should return the measurement
-        vision::getYaw,
+        // vision::getYaw,
+        () -> vision.getYaw(),
         // This should return the setpoint (can also be a constant)
-        0,
+        () -> 0,
         // This uses the output
         output -> {
           // Use the output here
           drive.arcadeDrive(0, output);
-        },
-        drive
-        );
+        });
       m_drive = drive;
       m_vision = vision;
+      addRequirements(drive);
   }
 
   public void initialize() {
