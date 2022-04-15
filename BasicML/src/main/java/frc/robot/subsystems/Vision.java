@@ -7,16 +7,18 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Vision extends SubsystemBase {
-    NetworkTableEntry deviceEntry;
-    NetworkTableEntry resolutionEntry;
-    NetworkTableEntry fspEntry;
-    NetworkTableEntry rectHeightEntry;
+    private NetworkTable m_tableML = NetworkTableInstance.getDefault().getTable("ML");
+    private NetworkTableEntry deviceEntry;
+    private NetworkTableEntry resolutionEntry;
+    private NetworkTableEntry fspEntry;
+    private NetworkTableEntry detectionsEntry;
     private int centerX = -1;
     private int width = -1;
 
@@ -24,20 +26,21 @@ public class Vision extends SubsystemBase {
     private int rectHeight;
 
     public Vision() {
-        deviceEntry = NetworkTableInstance.getDefault().getTable("ML").getEntry("device");
-        resolutionEntry = NetworkTableInstance.getDefault().getTable("ML").getEntry("resolution");
-        fspEntry = NetworkTableInstance.getDefault().getTable("ML").getEntry("fsp");
-
-        System.out.println("OAK Device:" + deviceEntry);
-        System.out.println("Image Resolution:" + resolutionEntry);
-        SmartDashboard.putString("OAK Device", deviceEntry.getName());
-        SmartDashboard.putString("Image Resolution:", resolutionEntry.getName());
+        
+        deviceEntry = m_tableML.getEntry("device");
+        resolutionEntry = m_tableML.getEntry("resolution");
+        
+        SmartDashboard.putString("OAK Device", deviceEntry.getString("Not getting device"));
+        SmartDashboard.putString("Image Resolution:", resolutionEntry.getString("No resolution"));
     }
 
     @Override
     public void periodic() {
         // Data from Python 
-        // centerX = (int)centerEntry.getDouble(0.0);
+        detectionsEntry = m_tableML.getEntry("detections");
+        fspEntry = m_tableML.getEntry("fsp");
+        SmartDashboard.putNumber("FSP", fspEntry.getDouble(0.0));
+        // System.out.println(fspEntry.getDouble(0.0));
 
         // SmartDashboard.putNumber("X Center", centerX);
         // SmartDashboard.putNumber("Rect Width", rectWidth);
