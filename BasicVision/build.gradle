@@ -71,8 +71,8 @@ dependencies {
 }
 
 // Simulation configuration (e.g. environment variables).
-wpi.sim.envVar("HALSIMWS_HOST", "192.168.0.118")
-// wpi.sim.envVar("HALSIMWS_HOST", "10.0.0.2")
+// wpi.sim.envVar("HALSIMWS_HOST", "192.168.0.118")
+wpi.sim.envVar("HALSIMWS_HOST", "10.0.0.2")
 wpi.sim.addGui().defaultEnabled = true
 wpi.sim.addDriverstation()
 

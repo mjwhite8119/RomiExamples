@@ -16,7 +16,7 @@
     }
   },
   "NetworkTables": {
-    "SmartDashboard": {
+    "ML": {
       "open": true
     }
   }
