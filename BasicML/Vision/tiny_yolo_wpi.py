@@ -209,7 +209,7 @@ with dai.Device(pipeline) as device:
             # Put to Network Tables
             temp_entry = []
             temp_entry.append({"label": detection.label, "box": {"ymin": detection.ymin, "xmin": detection.xmin, 
-                                "ymax": detection.ymax, "xmax": detection.xmax}, "confidence%": int(detection.confidence * 100)})
+                                "ymax": detection.ymax, "xmax": detection.xmax}, "confidence": int(detection.confidence * 100)})
             entry.setString(json.dumps(temp_entry))
             
         # Show the frame

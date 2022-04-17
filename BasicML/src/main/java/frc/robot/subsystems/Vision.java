@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.detections.Detections;
 
+import java.util.Collections;
 import java.util.Map;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -27,13 +28,8 @@ public class Vision extends SubsystemBase {
     private NetworkTableEntry fspEntry;
     private NetworkTableEntry detectionsEntry;
 
-    Detections m_detections;
-
-    private int centerX = -1;
-    private int width = -1;
-
-    private int rectWidth;
-    private int rectHeight;
+    Detections m_detections = new Detections();
+    Map<String, Integer> emptyMap = Collections.emptyMap();
 
     public Vision() {
         
@@ -48,15 +44,15 @@ public class Vision extends SubsystemBase {
     public void periodic() {
         // Data from Python 
         detectionsEntry = m_tableML.getEntry("detections");
-        parseDetections(detectionsEntry.getString(""));
+        parseDetections(detectionsEntry.getString("No detections"));
         
         fspEntry = m_tableML.getEntry("fsp");
         SmartDashboard.putNumber("FSP", fspEntry.getDouble(0.0));
 
         SmartDashboard.putNumber("ymin", getYMin());
-        SmartDashboard.putNumber("xmin", getXMin());
-        SmartDashboard.putNumber("ymax", getYMax());
-        SmartDashboard.putNumber("xmax", getXMax());
+        // SmartDashboard.putNumber("xmin", getXMin());
+        // SmartDashboard.putNumber("ymax", getYMax());
+        // SmartDashboard.putNumber("xmax", getXMax());
     }
 
     public void parseDetections(String json) {
@@ -66,7 +62,8 @@ public class Vision extends SubsystemBase {
         try {
             m_detections = mapper.readValue(json, Detections.class);
         } catch (JsonProcessingException e) {
-            System.out.println(json);
+            System.out.println(e);
+            m_detections.box = emptyMap;
         } 	    
     }
 
@@ -79,11 +76,16 @@ public class Vision extends SubsystemBase {
     }
 
     public Map<String, Integer> getBox() {
-        return m_detections.box;
+        // System.out.println(m_detections.box);
+        return m_detections.box; 
     }
 
     public Integer getYMin() {
-        return getBox().get("ymin");
+        Integer ymin = getBox().get("ymin");
+        if (ymin != null) {
+            return ymin;
+        }
+        return -1;
     }
 
     public Integer getXMin() {

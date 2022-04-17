@@ -1,5 +1,6 @@
 package frc.robot.detections;
 
+import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -20,6 +21,6 @@ import java.util.Map;
  */
 public class Detections {
     public String label;
-    public Map<String, Integer> box;
+    public Map<String, Integer> box = Collections.emptyMap();
     public int confidence;                         
 }
