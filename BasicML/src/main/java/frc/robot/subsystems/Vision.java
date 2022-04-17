@@ -28,8 +28,8 @@ public class Vision extends SubsystemBase {
     private NetworkTableEntry fspEntry;
     private NetworkTableEntry detectionsEntry;
 
-    Detections m_detections = new Detections();
-    Map<String, Integer> emptyMap = Collections.emptyMap();
+    Detections[] m_detections;
+    Map<String, Double> emptyMap = Collections.emptyMap();
 
     public Vision() {
         
@@ -49,10 +49,12 @@ public class Vision extends SubsystemBase {
         fspEntry = m_tableML.getEntry("fsp");
         SmartDashboard.putNumber("FSP", fspEntry.getDouble(0.0));
 
+        SmartDashboard.putString("label", getLabel());
         SmartDashboard.putNumber("ymin", getYMin());
-        // SmartDashboard.putNumber("xmin", getXMin());
-        // SmartDashboard.putNumber("ymax", getYMax());
-        // SmartDashboard.putNumber("xmax", getXMax());
+        SmartDashboard.putNumber("xmin", getXMin());
+        SmartDashboard.putNumber("ymax", getYMax());
+        SmartDashboard.putNumber("xmax", getXMax());
+        SmartDashboard.putNumber("confidence", getConfidence());
     }
 
     public void parseDetections(String json) {
@@ -60,43 +62,44 @@ public class Vision extends SubsystemBase {
 		ObjectMapper mapper = new ObjectMapper();
         //JSON string to Java Object
         try {
-            m_detections = mapper.readValue(json, Detections.class);
+            m_detections = mapper.readValue(json, Detections[].class);
         } catch (JsonProcessingException e) {
             System.out.println(e);
-            m_detections.box = emptyMap;
-        } 	    
+            System.out.println(json);
+            // m_detections.box = emptyMap;
+        } 	 
     }
 
     public String getLabel() {
-        return m_detections.label;
+        return m_detections[0].label;
     }
 
     public int getConfidence() {
-        return m_detections.confidence;
+        return m_detections[0].confidence;
     }
 
-    public Map<String, Integer> getBox() {
-        // System.out.println(m_detections.box);
-        return m_detections.box; 
+    public Map<String, Double> getBox() {
+        return m_detections[0].box; 
     }
 
-    public Integer getYMin() {
-        Integer ymin = getBox().get("ymin");
+    public Double getYMin() {
+        // System.out.println(getBox());
+        Double ymin = getBox().get("ymin");
         if (ymin != null) {
             return ymin;
         }
-        return -1;
+        return -1.0;
     }
 
-    public Integer getXMin() {
+    public Double getXMin() {
         return getBox().get("xmin");
     }
     
-    public Integer getYMax() {
+    public Double getYMax() {
         return getBox().get("ymax");
     }
 
-    public Integer getXMax() {
+    public Double getXMax() {
         return getBox().get("xmax");
     }
 

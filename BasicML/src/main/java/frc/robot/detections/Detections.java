@@ -17,10 +17,10 @@ import java.util.Map;
  *      "ymax": detection.ymax, 
  *      "xmax": detection.xmax
  *  }, 
- *  "confidence%": int(detection.confidence * 100)}  
+ *  "confidence": int(detection.confidence * 100)}  
  */
 public class Detections {
     public String label;
-    public Map<String, Integer> box = Collections.emptyMap();
+    public Map<String, Double> box = Collections.emptyMap();
     public int confidence;                         
 }
