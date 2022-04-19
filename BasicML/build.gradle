@@ -86,6 +86,6 @@ jar {
 }
 
 // Configure jar and deploy tasks
-deployArtifact.jarTask = jar
+// deployArtifact.jarTask = jar
 wpi.java.configureExecutableTasks(jar)
 wpi.java.configureTestTasks(test)
