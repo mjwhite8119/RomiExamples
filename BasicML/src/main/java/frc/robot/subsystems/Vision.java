@@ -13,17 +13,23 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+import frc.robot.detections.Detections;
+
+import java.util.Collections;
+import java.util.Map;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 public class Vision extends SubsystemBase {
     private NetworkTable m_tableML = NetworkTableInstance.getDefault().getTable("ML");
     private NetworkTableEntry deviceEntry;
     private NetworkTableEntry resolutionEntry;
     private NetworkTableEntry fspEntry;
     private NetworkTableEntry detectionsEntry;
-    private int centerX = -1;
-    private int width = -1;
 
-    private int rectWidth;
-    private int rectHeight;
+    Detections[] m_detections;
+    Map<String, Double> emptyMap = Collections.emptyMap();
 
     public Vision() {
         
@@ -38,34 +44,64 @@ public class Vision extends SubsystemBase {
     public void periodic() {
         // Data from Python 
         detectionsEntry = m_tableML.getEntry("detections");
+        parseDetections(detectionsEntry.getString("No detections"));
+        
         fspEntry = m_tableML.getEntry("fsp");
         SmartDashboard.putNumber("FSP", fspEntry.getDouble(0.0));
-        // System.out.println(fspEntry.getDouble(0.0));
 
-        // SmartDashboard.putNumber("X Center", centerX);
-        // SmartDashboard.putNumber("Rect Width", rectWidth);
-        // SmartDashboard.putNumber("Rect Height", rectHeight);
-        // SmartDashboard.putNumber("Rect Area", rectHeight * rectWidth);
+        SmartDashboard.putString("label", getLabel());
+        SmartDashboard.putNumber("ymin", getYMin());
+        SmartDashboard.putNumber("xmin", getXMin());
+        SmartDashboard.putNumber("ymax", getYMax());
+        SmartDashboard.putNumber("xmax", getXMax());
+        SmartDashboard.putNumber("confidence", getConfidence());
     }
 
-    public int getWidth() {
-        return width;
+    public void parseDetections(String json) {
+        //create ObjectMapper instance
+		ObjectMapper mapper = new ObjectMapper();
+        //JSON string to Java Object
+        try {
+            m_detections = mapper.readValue(json, Detections[].class);
+        } catch (JsonProcessingException e) {
+            System.out.println(e);
+            System.out.println(json);
+            // m_detections.box = emptyMap;
+        } 	 
     }
 
-    public int getCenterX() {
-        return centerX == -1 ? 320: centerX;
+    public String getLabel() {
+        return m_detections[0].label;
     }
 
-    public int getRectWidth() {
-        return rectWidth;
+    public int getConfidence() {
+        return m_detections[0].confidence;
     }
 
-    public int getRectHeight() {
-        return rectHeight;
+    public Map<String, Double> getBox() {
+        return m_detections[0].box; 
     }
 
-    public int getRectArea() {
-        return rectWidth * rectHeight;
+    public Double getYMin() {
+        // System.out.println(getBox());
+        Double ymin = getBox().get("ymin");
+        if (ymin != null) {
+            return ymin;
+        }
+        return -1.0;
     }
+
+    public Double getXMin() {
+        return getBox().get("xmin");
+    }
+    
+    public Double getYMax() {
+        return getBox().get("ymax");
+    }
+
+    public Double getXMax() {
+        return getBox().get("xmax");
+    }
+
 }
 
