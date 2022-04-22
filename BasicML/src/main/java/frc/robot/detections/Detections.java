@@ -17,10 +17,14 @@ import java.util.Map;
  *      "ymax": detection.ymax, 
  *      "xmax": detection.xmax
  *  }, 
+ *  "spacial": {
+ *      "X": 
+ *  }
  *  "confidence": int(detection.confidence * 100)}  
  */
 public class Detections {
     public String label;
     public Map<String, Double> box = Collections.emptyMap();
+    public Map<String, Integer> spacial = Collections.emptyMap();
     public int confidence;                         
 }

@@ -55,6 +55,9 @@ public class Vision extends SubsystemBase {
         SmartDashboard.putNumber("ymax", getYMax());
         SmartDashboard.putNumber("xmax", getXMax());
         SmartDashboard.putNumber("confidence", getConfidence());
+        SmartDashboard.putNumber("X", getXCoord());
+        SmartDashboard.putNumber("Y", getYCoord());
+        SmartDashboard.putNumber("Z", getZCoord());
     }
 
     public void parseDetections(String json) {
@@ -78,6 +81,7 @@ public class Vision extends SubsystemBase {
         return m_detections[0].confidence;
     }
 
+    // Get bounding box components
     public Map<String, Double> getBox() {
         return m_detections[0].box; 
     }
@@ -101,6 +105,23 @@ public class Vision extends SubsystemBase {
 
     public Double getXMax() {
         return getBox().get("xmax");
+    }
+
+    // Get spacial components
+    public Map<String, Integer> getSpacial() {
+        return m_detections[0].spacial; 
+    }
+
+    public Integer getXCoord() {
+        return getSpacial().get("X");
+    }
+
+    public Integer getYCoord() {
+        return getSpacial().get("Y");
+    }
+
+    public Integer getZCoord() {
+        return getSpacial().get("Z");
     }
 
 }
