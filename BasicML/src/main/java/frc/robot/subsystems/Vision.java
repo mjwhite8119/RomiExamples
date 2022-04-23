@@ -62,14 +62,13 @@ public class Vision extends SubsystemBase {
 
     public void parseDetections(String json) {
         //create ObjectMapper instance
-		ObjectMapper mapper = new ObjectMapper();
-        //JSON string to Java Object
+		ObjectMapper mapper = new ObjectMapper();     
         try {
+            //JSON string to Java Object
             m_detections = mapper.readValue(json, Detections[].class);
         } catch (JsonProcessingException e) {
             System.out.println(e);
             System.out.println(json);
-            // m_detections.box = emptyMap;
         } 	 
     }
 

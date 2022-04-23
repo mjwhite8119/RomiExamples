@@ -10,17 +10,12 @@ import java.util.Map;
  * @param box The bounding bow around the detected object
  * @param confidence The confidence level of the detected object.
  * 
- * {"label": labelMap[detection.label], 
- *  "box": {
- *      "ymin": detection.ymin, 
- *      "xmin": detection.xmin, 
- *      "ymax": detection.ymax, 
- *      "xmax": detection.xmax
- *  }, 
- *  "spacial": {
- *      "X": 
- *  }
- *  "confidence": int(detection.confidence * 100)}  
+ * {
+ *  "label": labelMap[detection.label], 
+ *  "box": {"ymin": ymin, "xmin": xmin, "ymax": ymax, "xmax": xmax}, 
+ *  "spacial": {"X": x_coord, "Y": y_coord, "Z": z_coord},
+ *  "confidence": confidence
+ * }  
  */
 public class Detections {
     public String label;
